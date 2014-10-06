@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 describe "Static pages" do
 
   subject { page }
@@ -8,7 +9,17 @@ describe "Static pages" do
     it { should have_selector('h1', text: heading) }
     it { should have_title(full_title(page_title)) }
   end
+describe "micropost pagination" do
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      31.times { FactoryGirl.create(:micropost, user: user) }
+      sign_in user
+      visit root_path
+    end
+    after { user.microposts.destroy_all }
 
+    it { should have_selector("div.pagination") }
+  end
   describe "Home page" do
     before { visit root_path }
     let(:heading)    { 'Sample App' }
@@ -29,6 +40,9 @@ describe "Static pages" do
       it "should render the user's feed" do
         user.feed.each do |item|
           expect(page).to have_selector("li##{item.id}", text: item.content)
+       # expect(page).to have_selector('section h1',text: user.name);
+       # expect(page).to have_selector('section span',
+        #  text: pluralize(Micropost.count.to_s,"micropost"))
         end
       end
     end

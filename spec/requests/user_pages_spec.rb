@@ -54,7 +54,7 @@ require 'spec_helper'
    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Bar") }
 
      before { visit user_path(user) }
-     it { should have_content(user.name) }
+     it { should have_content( user.name) }
     it { should have_title(user.name) }
     describe "microposts" do
       it { should have_content(m1.content) }
