@@ -31,8 +31,8 @@ describe "micropost pagination" do
   describe "for signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       before do
-        FactoryGirl.create(:micropost, user: user, content: "Lorem ipsum")
-        FactoryGirl.create(:micropost, user: user, content: "Dolor sit amet")
+        FactoryGirl.create(:micropost, user: user, content: "Lorem")
+        FactoryGirl.create(:micropost, user: user, content: "Ipsum")
         sign_in user
         visit root_path
       end
@@ -45,8 +45,19 @@ describe "micropost pagination" do
         #  text: pluralize(Micropost.count.to_s,"micropost"))
         end
       end
+      describe "follower/following counts" do
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.follow!(user)
+          visit root_path
+        end
+
+        it { should have_link("0 following", href: following_user_path(user)) }
+        it { should have_link("1 followers", href: followers_user_path(user)) }
+      end
     end
   end
+   
   describe "Help page" do
     before { visit help_path }
 
